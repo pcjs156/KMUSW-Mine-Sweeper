@@ -124,48 +124,44 @@ class Board:
             # 지뢰가 아닌 경우
             else :
                 print("휴 살았당!")
-                # self.start_chaining(y, x)
-                self.open(y, x)
-    
-
-    '''
-    으 재귀적으로 칸 여는거 넘 어렵다,, 일단 한칸씩 구현
-    '''
-    # # open_chaining 시작
-    # def start_chaining(self, y, x):
-    #     global chk
-    #     chk = [[False for _ in range(self.size)] for _ in range(self.size)]
-    #     # self.open_chaining(y, x, chk)
-    #     self.open_chaining(y, x)
+                self.open_chaining(y, x)
 
 
-    # # 연쇄적으로 공개하기 : 벽이거나 지뢰를 만났을 경우 재귀 중단
-    # def open_chaining(self, y, x):
-    #     if chk[y][x] is True or isinstance(self.board[y][x], Wall) or isinstance(self.board[y][x], Mine) or self.board[y][x].cnt != 0:
-    #         return
-    #     else :
-    #         for v in CONST.VECTOR:
-    #             self.board[y][x].open()
-    #             chk[y][x] = True
-    #             self.open_chaining(y, x)
-                
+    def open_chaining(self, y, x):
+        
+        if isinstance(self.board[y][x], Wall) or (self.board[y][x].is_opened is True) :
+            return
+
+        self.board[y][x].is_opened = True
+        self.left_block -= 1
+
+        mine_around = False
+        
+        for v in CONST.VECTOR:
+            if isinstance(self.board[y+v[0]][x+v[1]], Mine) :
+                mine_around = True
+                break
+
+        if mine_around :
+            return
+        else :
+            for v in CONST.VECTOR:
+                self.open_chaining(y+v[0], x+v[1])   
 
     def is_cleared(self):
         return self.left_block == self.mine_cnt
 
-    def open(self, y, x):
-        self.board[y][x].is_opened = True
-        self.left_block -= 1
 
 if __name__ == '__main__':
-    SIZE = 2
-    MINE = 1
+    SIZE = 5
+    MINE = 10
 
     board = Board(SIZE, MINE)
     try_cnt = 0
     game_over = False
 
     while not game_over:
+        board.print_board(debug=True)
         board.print_board()
         while True:
             print(">>>", board.left_block, board.mine_cnt)
