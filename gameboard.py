@@ -190,7 +190,7 @@ class Board:
         else :
             # 지뢰인 경우
             if isinstance(self.board[y][x], Mine) :
-                print("지뢰를 선택하셨습니다!")
+                print("PLAYER {}님께서 지뢰를 선택하셨습니다!".format(self.now))
                 return CONST.BOOM
             
             # 지뢰가 아닌 경우

@@ -1,5 +1,6 @@
 import pygame as pg
 import time
+import sys
 
 import CONST as c
 from gameboard import Board
@@ -34,11 +35,14 @@ while running :
 
         player_txt = "PLAYER {}'s TURN".format(board.now)
         guide_txt = "Press SPACE to Open Block"
+        
+        p1_score = "P1 SCORE : {}".format(board.p[1].score)
+        p2_score = "P2 SCORE : {}".format(board.p[2].score)
 
         for event in pg.event.get():
             print(board.p[board.now].cursor_pos['x'], board.p[board.now].cursor_pos['y'])
             if event.type == pg.QUIT:
-                running = False
+                sys.exit()
 
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE :
@@ -77,6 +81,9 @@ while running :
         Rendering.render_text(screen, alarm_txt, 10, (127, c.CELL_SIZE*2-40), c.BLACK)
         Rendering.render_text(screen, player_txt, c.FONT_SIZE, (93, c.CELL_SIZE*2-20), Player.PLAYER_COLOR[board.now])
         Rendering.render_text(screen, guide_txt, 10, (112, c.CELL_SIZE*2), c.BLACK)
+        Rendering.render_text(screen, p1_score, 12, (0, 0), c.RED)
+        Rendering.render_text(screen, p2_score, 12, (c.WIDTH-80, 0), c.BLUE)
+        
         pg.display.update()
 
         

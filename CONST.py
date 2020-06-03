@@ -1,10 +1,11 @@
 
 # 배경화면 RGB 코드
-BOARD_COLOR = (166, 180, 181)
-BG_COLOR = (206,210,215)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+BOARD_COLOR = WHITE
+BG_COLOR = (206,210,215)
 
 # 크기관련
 INNER = 10 # 게임 판의 기본 크기
