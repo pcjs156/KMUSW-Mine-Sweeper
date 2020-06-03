@@ -13,7 +13,6 @@ class Board:
         self.left_block = size * size
 
         # board : 실제 데이터를 담는 보드
-
         # 일단 전부 빈 칸으로 설정
         self.board = [[Nothing(i, j) for j in range(self.size)] for i in range(self.size)]
         # 벽면 만들기
@@ -32,6 +31,9 @@ class Board:
                     self.board[i][j] = Mine(i, j)
                     self.count_mine(i, j)
                     break
+
+        # board_gui : 플레이어가 보게 될 보드(렌더링 기준)
+        self.board_gui = [[False for _ in range(self.size)] for _ in range(self.size)]
                     
         # 플레이어 인스턴스 생성
         # player1 : p[1] | player2 : p[2]
@@ -74,6 +76,23 @@ class Board:
         else :
             # 1플레이어의 차례였으면 2플레이어로,
             # 2플레이어의 차례였으면 1플레이어로
+            self.change_player()
+            return True
+    
+    def play_gui(self, y, x):
+        player_now = self.p[self.now]
+        
+        if not self.board[y][x].is_opened:
+            code = board.choose(y, x)
+            if code == CONST.BOOM:
+                player_now.is_game_over = True
+            else :
+                player_now.try_cnt += 1
+        
+        if player_now.is_game_over is True:
+            return False
+
+        else :
             self.change_player()
             return True
     
@@ -149,7 +168,6 @@ class Board:
                 print(self.board[i][j].is_opened, end=' ')
             print()
         print()
-
 
     # 보드 안의 좌표를 골랐는지 체크(아마 GUI로 옮기면서 할거같기는 한,,데 모르겠다)
     def is_inside(self, y, x):
