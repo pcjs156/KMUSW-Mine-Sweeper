@@ -27,13 +27,13 @@ board_start_pos = (c.CELL_SIZE, 4*c.CELL_SIZE)
 running = True
 gameover = False
 defeat = False
+alarm_txt = ""
 while running :
     while not gameover :
         dt = clock.tick(FPS)
 
         player_txt = "PLAYER {}'s TURN".format(board.now)
         guide_txt = "Press SPACE to Open Block"
-        alarm_txt = ""
 
         for event in pg.event.get():
             print(board.p[board.now].cursor_pos['x'], board.p[board.now].cursor_pos['y'])
