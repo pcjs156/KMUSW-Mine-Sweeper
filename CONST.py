@@ -1,9 +1,15 @@
 
 # 배경화면 RGB 코드
-BG_COLOR = (84, 122, 189)
+BOARD_COLOR = (166, 180, 181)
+BG_COLOR = (206,210,215)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 
 # 게임 판의 기본 크기
-WIDTH, HEIGHT = (300*12), (300*12)
+INNER = 10
+CELL_SIZE = 30
+SIZE = WIDTH, HEIGHT = (2*CELL_SIZE + (INNER * CELL_SIZE)),\
+                       (2*CELL_SIZE + (INNER * CELL_SIZE) + 3*CELL_SIZE)
 
 # 상태 코드
 ERROR = -1

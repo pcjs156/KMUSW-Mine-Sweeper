@@ -4,7 +4,7 @@ class Player:
     def __init__(self, board_size):
         self.board_size = board_size
         self.is_game_over = False
-        self.limit = c.SEC
+        self.limit = c.SEC * 30
         self.try_cnt = 0
 
     def is_inside(self, y, x):
