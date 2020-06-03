@@ -16,7 +16,7 @@ FPS = 60
 clock = pg.time.Clock()
 
 # Game Setting
-MINE = 1
+MINE = 10
 GAMEBOARD_SIZE = c.INNER
 board = Board(GAMEBOARD_SIZE, MINE)
 board_size = board.size
@@ -26,6 +26,7 @@ board_start_pos = (c.CELL_SIZE, 4*c.CELL_SIZE)
 
 running = True
 gameover = False
+defeat = False
 while running :
     while not gameover :
         dt = clock.tick(FPS)
@@ -45,7 +46,8 @@ while running :
                     if code is c.ERROR :
                         alarm_txt = "Already Opened"
                     elif code is c.BOOM:
-                        gameover = True
+                        gameover = True # gameover는 게임 종료
+                        defeat = True # defeat은 지뢰를 밟아서 누군가 진 경우
                     else :
                         alarm_txt = ""
                         board.change_player()
@@ -80,3 +82,12 @@ while running :
         
         if board.left_block == board.mine_cnt :
             gameover = True
+    
+    if defeat:
+        print("PLAYER {} is defeated".format(board.now))
+    else:
+        p1_score = board.p[1].score
+        p2_score = board.p[2].score
+        winner = 1 if p1_score > p2_score else 2
+        print("WINNER : {}".format(winner))
+    break

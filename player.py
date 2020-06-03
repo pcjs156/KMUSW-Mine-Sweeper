@@ -7,7 +7,7 @@ class Player:
         self.size = board_size
         self.is_game_over = False
         self.limit = c.SEC * 30
-        self.try_cnt = 0
+        self.score = 0
         self.cursor_pos = {'x':1, 'y':1} # y | x
 
     def move(self, direction):

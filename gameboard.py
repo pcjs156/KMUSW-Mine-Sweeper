@@ -204,6 +204,7 @@ class Board:
         if isinstance(self.board[y][x], Wall) or (self.board[y][x].is_opened is True) :
             return
 
+        self.p[self.now].score += 1
         self.board[y][x].is_opened = True
         self.left_block -= 1
 
