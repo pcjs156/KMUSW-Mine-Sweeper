@@ -74,9 +74,12 @@ class Board:
         else :
             # 1플레이어의 차례였으면 2플레이어로,
             # 2플레이어의 차례였으면 1플레이어로
-            if self.now == 1 : self.now = 2
-            else : self.now = 1
+            self.change_player()
             return True
+    
+    def change_player(self):
+        if self.now == 1 : self.now = 2
+        else : self.now = 1
 
     def get_winner_loser(self):
         # 1이 졌으면 (2, 1), 2가 졌으면(1, 2) 리턴 [(승자, 패자)]
