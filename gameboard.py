@@ -3,6 +3,7 @@ from random import randint
 
 import CONST
 from elements import *
+from player import Player
 
 class Board:
     def __init__(self, size, mine):
@@ -31,6 +32,56 @@ class Board:
                     self.board[i][j] = Mine(i, j)
                     self.count_mine(i, j)
                     break
+                    
+        # 플레이어 인스턴스 생성
+        # player1 : p[1] | player2 : p[2]
+        # 플레이어 1이 먼저 게임을 시작하고, play()의 마지막에 순서를 넘김
+        self.p = {1:Player(self.size), 2:Player(self.size)}
+        self.now = 1
+
+    def main(self):
+        while True :
+            if self.play() is False :
+                winner, loser = self.get_winner_loser()
+                break
+        print("WINNER : PLAYER {}".format(winner))
+        print("LOSER : PLAYER {}".format(loser))
+
+    def play(self):
+        print("PLAYER {}'s TURN".format(self.now))
+        player_now = self.p[self.now]
+        
+        while True:
+            self.print_board()
+            print("남은 블럭 수 :", self.left_block)
+            y, x = map(int, input("(y, x)? : ").split())
+            code = board.choose(y, x)
+            if code == CONST.ERROR:
+                continue
+            elif code == CONST.BOOM:
+                player_now.is_game_over = True
+                break
+            else :
+                player_now.try_cnt += 1
+                break
+        
+        # 만약 player_now가 졌으면
+        # 게임이 끝났다는 의미로 False를 리턴해 main 메서드에 전달
+        if player_now.is_game_over is True:
+            return False
+
+        # 만약 게임이 안끝났다면 True를 리턴해 main 메서드에 전달
+        else :
+            # 1플레이어의 차례였으면 2플레이어로,
+            # 2플레이어의 차례였으면 1플레이어로
+            if self.now == 1 : self.now = 2
+            else : self.now = 1
+            return True
+
+    def get_winner_loser(self):
+        # 1이 졌으면 (2, 1), 2가 졌으면(1, 2) 리턴 [(승자, 패자)]
+        return (2, 1) if self.p[1].is_game_over is True else (1, 2)
+
 
     # board[y][x] 자신+주변 9칸의 빈칸에 표시
     def count_mine(self, y, x):
@@ -157,27 +208,4 @@ if __name__ == '__main__':
     MINE = 10
 
     board = Board(SIZE, MINE)
-    try_cnt = 0
-    game_over = False
-
-    while not game_over:
-        board.print_board(debug=True)
-        board.print_board()
-        while True:
-            print(">>>", board.left_block, board.mine_cnt)
-            y, x = map(int, input("(y, x)? : ").split())
-            code = board.choose(y, x)
-            if code == CONST.ERROR:
-                continue
-            elif code == CONST.BOOM:
-                game_over = True
-                break
-            else :
-                try_cnt += 1
-                break
-        
-        if board.is_cleared():
-            print("Congratulations! You win!")
-            break
-
-    print("TRY:", try_cnt)
+    board.main()
