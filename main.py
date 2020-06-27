@@ -16,14 +16,6 @@ screen = pg.display.set_mode(c.SIZE)
 FPS = 60
 clock = pg.time.Clock()
 
-# Game Setting
-MINE = 10
-GAMEBOARD_SIZE = c.INNER
-board = Board(GAMEBOARD_SIZE, MINE)
-board_size = board.size
-
-# About Rendering
-board_start_pos = (c.CELL_SIZE, 4*c.CELL_SIZE)
 
 # Audio
 pg.mixer.music.load('./bgm/default_music.wav')
@@ -35,6 +27,15 @@ defeat_by_mine = False
 defeat_by_time = False
 alarm_txt = ""
 while running :
+    # Game Setting
+    MINE = 10
+    GAMEBOARD_SIZE = c.INNER
+    board = Board(GAMEBOARD_SIZE, MINE)
+    board_size = board.size
+
+    # About Rendering
+    board_start_pos = (c.CELL_SIZE, 4*c.CELL_SIZE)
+
     board.p[board.now].counting_start = time.time()
     while not gameover :
         if board.p[board.now].time_up():
@@ -88,7 +89,7 @@ while running :
         Rendering.render_cursor(screen, c.CELL_SIZE, board_start_pos, player_now.cursor_pos['y'], player_now.cursor_pos['x'], board.now)
 
         # 누가 플레이중?
-        Rendering.render_text(screen, alarm_txt, 10, (127, c.CELL_SIZE*2-40), c.BLACK)
+        Rendering.render_text(screen, alarm_txt, 10, (140, c.CELL_SIZE*2-40), c.BLACK)
         Rendering.render_text(screen, player_txt, c.FONT_SIZE, (93, c.CELL_SIZE*2-20), Player.PLAYER_COLOR[board.now])
         Rendering.render_text(screen, guide_txt, 10, (112, c.CELL_SIZE*2), c.BLACK)
         Rendering.render_text(screen, p1_score, 12, (0, 0), c.RED)
@@ -96,23 +97,28 @@ while running :
 
         # 남은 시간
         sec_txt = '{:0.1f}'.format(board.p[board.now].time_left())
-        Rendering.render_text(screen, sec_txt, 20, (170, c.CELL_SIZE*2+20), c.BLACK)
+        sec_color = c.BLACK if board.p[board.now].time_left() < Player.TIME_LIMIT//3*2 else c.RED
+        Rendering.render_text(screen, sec_txt, 20, (170, c.CELL_SIZE*2+20), sec_color)
         
         pg.display.update()
 
         if board.left_block == board.mine_cnt :
             gameover = True
     
+
     # 시간초과
     if defeat_by_time:
+        result_message = 'TIME UP!'
         print("Player {}님의 시간이 모두 종료되었습니다.".format(board.now))
         winner = 1 if board.now == 2 else 2
     # 지뢰밟음
     elif defeat_by_mine:
+        result_message = 'BOOOOM!'
         print("Player {}님이 지뢰를 선택하셨습니다.".format(board.now))
         winner = 1 if board.now == 2 else 2
     # 남은 지뢰가 없음
     else:
+        result_message = 'PERFECT!'
         print("Player {}님의 점수가 더 낮습니다.".format(board.now))
         p1_score = board.p[1].score
         p2_score = board.p[2].score
@@ -120,4 +126,36 @@ while running :
 
     print("WINNER: Player {}".format(winner))
 
-    break
+
+    restart = False
+    keydown = False
+    while True:
+        screen.fill(c.BG_COLOR)
+        Rendering.render_text(screen, result_message, 40, (90, c.CELL_SIZE*2+40), c.BLACK)
+        winner_color = c.RED if winner == 1 else c.BLUE
+        Rendering.render_text(screen, 'WINNER: Player {}'.format(winner), 30, (50, c.CELL_SIZE*2+80), winner_color)
+        Rendering.render_text(screen, 'Press Spacebar to play again', 15, (75, c.CELL_SIZE*2+110), c.BLACK)
+        Rendering.render_text(screen, 'Or Press X Key to stop playing', 15, (70, c.CELL_SIZE*2+125), c.BLACK)
+        pg.display.update()
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                sys.exit()
+
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE :
+                    restart = True
+                    keydown = True
+                    break
+                if event.key == pg.K_x :
+                    restart = False
+                    keydown = True
+                    break
+        if keydown:
+            break
+    
+    if restart :
+        gameover = False
+        continue
+    else:
+        break
