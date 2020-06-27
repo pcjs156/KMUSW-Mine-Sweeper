@@ -178,24 +178,20 @@ class Board:
     def choose(self, y, x):
         # 보드를 벗어난 경우
         if not self.is_inside(y, x):
-            print("1 ~ {} 사이의 값을 입력하세요.".format(self.size-2))
             return CONST.ERROR
 
         # 이미 공개된 칸인 경우
         elif self.board[y][x].is_opened is True :
-            print("이미 공개된 칸입니다.")
             return CONST.ERROR
 
         # 비공개된 칸인 경우
         else :
             # 지뢰인 경우
             if isinstance(self.board[y][x], Mine) :
-                print("PLAYER {}님께서 지뢰를 선택하셨습니다!".format(self.now))
                 return CONST.BOOM
             
             # 지뢰가 아닌 경우
             else :
-                print("휴 살았당!")
                 self.open_chaining(y, x)
 
 

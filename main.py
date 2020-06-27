@@ -31,13 +31,14 @@ pg.mixer.music.play(-1)
 
 running = True
 gameover = False
-defeat = False
+defeat_by_mine = False
+defeat_by_time = False
 alarm_txt = ""
 while running :
     board.p[board.now].counting_start = time.time()
     while not gameover :
         if board.p[board.now].time_up():
-            print("Player {}님의 시간이 모두 종료되었습니다.".format(board.now))
+            defeat_by_time = True
             break
 
         dt = clock.tick(FPS)
@@ -49,7 +50,6 @@ while running :
         p2_score = "P2 SCORE : {}".format(board.p[2].score)
 
         for event in pg.event.get():
-            print(board.p[board.now].cursor_pos['x'], board.p[board.now].cursor_pos['y'])
             if event.type == pg.QUIT:
                 sys.exit()
 
@@ -60,7 +60,7 @@ while running :
                         alarm_txt = "Already Opened"
                     elif code is c.BOOM:
                         gameover = True # gameover는 게임 종료
-                        defeat = True # defeat은 지뢰를 밟아서 누군가 진 경우
+                        defeat_by_mine = True # defeat_by_mine은 지뢰를 밟아서 누군가 진 경우
                     else :
                         alarm_txt = ""
                         board.change_player()
@@ -100,15 +100,24 @@ while running :
         
         pg.display.update()
 
-        
         if board.left_block == board.mine_cnt :
             gameover = True
     
-    if defeat:
-        print("PLAYER {} is defeated".format(board.now))
+    # 시간초과
+    if defeat_by_time:
+        print("Player {}님의 시간이 모두 종료되었습니다.".format(board.now))
+        winner = 1 if board.now == 2 else 2
+    # 지뢰밟음
+    elif defeat_by_mine:
+        print("Player {}님이 지뢰를 선택하셨습니다.".format(board.now))
+        winner = 1 if board.now == 2 else 2
+    # 남은 지뢰가 없음
     else:
+        print("Player {}님의 점수가 더 낮습니다.".format(board.now))
         p1_score = board.p[1].score
         p2_score = board.p[2].score
         winner = 1 if p1_score > p2_score else 2
-        print("WINNER : {}".format(winner))
+
+    print("WINNER: Player {}".format(winner))
+
     break
