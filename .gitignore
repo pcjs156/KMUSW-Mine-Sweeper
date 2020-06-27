@@ -16,4 +16,6 @@ env.bak/
 venv.bak/
 pip-selfcheck.json
 
+__pycache__/*
+
 # End of https://www.gitignore.io/api/venv

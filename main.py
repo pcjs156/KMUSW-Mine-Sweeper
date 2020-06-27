@@ -16,10 +16,9 @@ screen = pg.display.set_mode(c.SIZE)
 FPS = 60
 clock = pg.time.Clock()
 
-
 # Audio
-pg.mixer.music.load('./bgm/default_music.wav')
-pg.mixer.music.play(-1)
+pg.mixer.music.load('./resource/sounds/bgm/default_music.wav')
+boom_sound = pg.mixer.Sound('./resource/sounds/effects/boom.wav')
 
 running = True
 gameover = False
@@ -33,9 +32,11 @@ while running :
     board = Board(GAMEBOARD_SIZE, MINE)
     board_size = board.size
 
+    # BGM
+    pg.mixer.music.play(-1)
+
     # About Rendering
     board_start_pos = (c.CELL_SIZE, 4*c.CELL_SIZE)
-
     board.p[board.now].counting_start = time.time()
     while not gameover :
         if board.p[board.now].time_up():
@@ -127,6 +128,8 @@ while running :
     print("WINNER: Player {}".format(winner))
 
 
+    pg.mixer.music.stop()
+    pg.mixer.Sound.play(boom_sound)
     restart = False
     keydown = False
     while True:

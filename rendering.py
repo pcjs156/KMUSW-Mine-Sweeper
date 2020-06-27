@@ -3,21 +3,21 @@ import pygame as pg
 import CONST as c
 
 class Rendering:
-    cursor_list = (pg.image.load('img/p1_cursor.png'), pg.image.load('img/p2_cursor.png'))
+    cursor_list = (pg.image.load('./resource/img/p1_cursor.png'), pg.image.load('./resource/img/p2_cursor.png'))
 
-    mine = pg.image.load('img/mine.png')
-    icon_closed = pg.image.load('img/closed.png')
+    mine = pg.image.load('./resource/img/mine.png')
+    icon_closed = pg.image.load('./resource/img/closed.png')
 
     num_icon = [
-        pg.image.load('img/opened.png'),
-        pg.image.load('img/icon_1.png'),
-        pg.image.load('img/icon_2.png'),
-        pg.image.load('img/icon_3.png'),
-        pg.image.load('img/icon_4.png'),
-        pg.image.load('img/icon_5.png'),
-        pg.image.load('img/icon_6.png'),
-        pg.image.load('img/icon_7.png'),
-        pg.image.load('img/icon_8.png')
+        pg.image.load('./resource/img/opened.png'),
+        pg.image.load('./resource/img/icon_1.png'),
+        pg.image.load('./resource/img/icon_2.png'),
+        pg.image.load('./resource/img/icon_3.png'),
+        pg.image.load('./resource/img/icon_4.png'),
+        pg.image.load('./resource/img/icon_5.png'),
+        pg.image.load('./resource/img/icon_6.png'),
+        pg.image.load('./resource/img/icon_7.png'),
+        pg.image.load('./resource/img/icon_8.png')
     ]
 
     @staticmethod
