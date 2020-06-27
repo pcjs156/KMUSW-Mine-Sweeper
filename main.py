@@ -5,7 +5,7 @@ import sys
 import CONST as c
 from gameboard import Board
 from rendering import Rendering
-from player import Player
+from player import Player  
 
 # Pygame Initializing
 pg.init()
@@ -25,12 +25,21 @@ board_size = board.size
 # About Rendering
 board_start_pos = (c.CELL_SIZE, 4*c.CELL_SIZE)
 
+# Audio
+pg.mixer.music.load('./bgm/default_music.wav')
+pg.mixer.music.play(-1)
+
 running = True
 gameover = False
 defeat = False
 alarm_txt = ""
 while running :
+    board.p[board.now].counting_start = time.time()
     while not gameover :
+        if board.p[board.now].time_up():
+            print("Player {}님의 시간이 모두 종료되었습니다.".format(board.now))
+            break
+
         dt = clock.tick(FPS)
 
         player_txt = "PLAYER {}'s TURN".format(board.now)
@@ -55,6 +64,7 @@ while running :
                     else :
                         alarm_txt = ""
                         board.change_player()
+                        board.p[board.now].counting_start = time.time()
 
                 elif event.key == pg.K_LEFT:
                     board.p[board.now].move(c.V_DICT["LEFT"])
@@ -83,6 +93,10 @@ while running :
         Rendering.render_text(screen, guide_txt, 10, (112, c.CELL_SIZE*2), c.BLACK)
         Rendering.render_text(screen, p1_score, 12, (0, 0), c.RED)
         Rendering.render_text(screen, p2_score, 12, (c.WIDTH-80, 0), c.BLUE)
+
+        # 남은 시간
+        sec_txt = '{:0.1f}'.format(board.p[board.now].time_left())
+        Rendering.render_text(screen, sec_txt, 20, (170, c.CELL_SIZE*2+20), c.BLACK)
         
         pg.display.update()
 
